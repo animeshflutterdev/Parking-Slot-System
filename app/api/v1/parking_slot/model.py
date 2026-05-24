@@ -1,4 +1,4 @@
-from sqlalchemy import (Column,String,Boolean,DateTime)
+from sqlalchemy import (Column,String,Boolean,DateTime,ForeignKey)
 
 from app.core.database import Base
 
@@ -34,7 +34,15 @@ class ParkingSlot(Base):
 
     is_occupied = Column(
         Boolean,
-        default=False
+        default=False,
+        nullable=False
+    )
+
+    # Which vehicle currently occupies this slot. NULL when free.
+    vehicle_id = Column(
+        String,
+        ForeignKey("vehicles.id"),
+        nullable=True
     )
 
     created_at = Column(
