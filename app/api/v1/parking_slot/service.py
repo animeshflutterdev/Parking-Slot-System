@@ -94,5 +94,14 @@ class ParkingSlotService(BaseService):
         return self.slot_repository.get_slot_by_id(slot_id)
 
     @Helpers.handle_service_exception("get_all_slots")
-    def get_all_slots(self):
-        return self.slot_repository.get_all_slots()
+    def get_all_slots(
+        self,
+        slot_type: str | None = None,
+        is_occupied: bool | None = None,
+        floor: str | None = None,
+    ):
+        return self.slot_repository.get_all_slots(
+            slot_type=slot_type,
+            is_occupied=is_occupied,
+            floor=floor,
+        )

@@ -83,5 +83,23 @@ class ParkingSlotRepository:
         self.db.commit()
         return rows_updated > 0
 
-    def get_all_slots(self):
-        return self.db.query(ParkingSlot).all()
+    def get_all_slots(
+        self,
+        slot_type: str | None = None,
+        is_occupied: bool | None = None,
+        floor: str | None = None,
+    ):
+        """
+        Return every slot, optionally narrowed by type / occupancy / floor.
+        All filters are independent — pass None to skip a filter.
+        """
+        query = self.db.query(ParkingSlot)
+
+        if slot_type is not None:
+            query = query.filter(ParkingSlot.slot_type == slot_type)
+        if is_occupied is not None:
+            query = query.filter(ParkingSlot.is_occupied == is_occupied)
+        if floor is not None:
+            query = query.filter(ParkingSlot.floor == floor)
+
+        return query.order_by(ParkingSlot.floor, ParkingSlot.slot_number).all()

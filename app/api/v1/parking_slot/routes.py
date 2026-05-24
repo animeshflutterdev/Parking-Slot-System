@@ -1,4 +1,4 @@
-from fastapi import (APIRouter, Depends, status)
+from fastapi import (APIRouter, Depends, Query, status)
 from sqlalchemy.orm import Session
 
 from app.core.dependencies import get_db
@@ -23,6 +23,36 @@ router = APIRouter()
 def create_slot(payload: CreateParkingSlotSchema, db: Session = Depends(get_db)):
     service = ParkingSlotService(db)
     return service.create_slot(payload)
+
+
+@router.get(
+    "/slots",
+    response_model=list[ParkingSlotResponseSchema],
+    summary="List all slots (free + occupied), with optional filters",
+)
+def get_all_slots(
+    slot_type: SlotType | None = Query(
+        default=None, description="Filter by slot type (CAR / BIKE / TRUCK)"
+    ),
+    is_occupied: bool | None = Query(
+        default=None, description="Filter by occupancy. Omit for both."
+    ),
+    floor: str | None = Query(
+        default=None, description="Filter by floor"
+    ),
+    db: Session = Depends(get_db),
+):
+    """
+    Returns every slot in the system. Pass any combination of the
+    query filters to narrow the result; with no filters you get the
+    full list of occupied and free slots.
+    """
+    service = ParkingSlotService(db)
+    return service.get_all_slots(
+        slot_type=slot_type.value if slot_type else None,
+        is_occupied=is_occupied,
+        floor=floor,
+    )
 
 
 @router.get(
