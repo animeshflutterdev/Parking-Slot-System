@@ -71,6 +71,13 @@ class VehicleService(BaseService):
 
     @Helpers.handle_service_exception("create_vehicle")
     def create_vehicle(self, vehicle_data):
+        check_vehicle_number = Helpers.check_vehicle_number(vehicle_data.plate_number)
+
+        if not check_vehicle_number:
+            raise HTTPException(
+                status_code=400,
+                detail="Invalid plate number"
+            )
 
         existing_vehicle = (
             self.vehicle_repository

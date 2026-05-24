@@ -26,5 +26,11 @@ class Helpers:
             return wrapper
 
         return decorator
+    
+    def check_vehicle_number(plate_number: str) -> bool:
+        plate_number = plate_number.replace(" ", "")
+        if len(plate_number) > 9 or len(plate_number) < 0:
+            return False
+        return True
 
 helper = Helpers()
