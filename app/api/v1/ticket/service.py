@@ -75,6 +75,7 @@ class TicketService(BaseService):
             claimed = self.slot_repository.try_occupy_slot(
                 slot_id=slot.id,
                 vehicle_id=vehicle.id,
+                vehicle_type=vehicle.vehicle_type,
                 commit=False,
             )
             if not claimed:

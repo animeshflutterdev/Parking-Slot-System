@@ -29,7 +29,7 @@ class Helpers:
     
     def check_vehicle_number(plate_number: str) -> bool:
         plate_number = plate_number.replace(" ", "")
-        if len(plate_number) > 9 or len(plate_number) < 0:
+        if len(plate_number) > 10 or len(plate_number) < 0:
             return False
         return True
 

@@ -38,6 +38,7 @@ class ParkingSlotRepository:
         self,
         slot_id: str,
         vehicle_id: str,
+        vehicle_type: str,
         commit: bool = True,
     ) -> bool:
         """
@@ -58,6 +59,7 @@ class ParkingSlotRepository:
             .filter(
                 ParkingSlot.id == slot_id,
                 ParkingSlot.is_occupied == False,
+                ParkingSlot.slot_type == vehicle_type,
             )
             .update(
                 {

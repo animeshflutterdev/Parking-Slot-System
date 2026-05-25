@@ -56,6 +56,7 @@ class ParkingSlotService(BaseService):
             claimed = self.slot_repository.try_occupy_slot(
                 slot_id=slot.id,
                 vehicle_id=vehicle.id,
+                vehicle_type=vehicle.vehicle_type,
             )
             if claimed:
                 # Re-read to get fresh state with vehicle_id set
