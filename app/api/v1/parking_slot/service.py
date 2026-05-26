@@ -1,9 +1,11 @@
-from fastapi import HTTPException
+from fastapi import HTTPException, status
 
+from app.api.v1.parking_slot.schemas import CreateParkingSlotSchema
 from app.core.base_service import BaseService
 from app.api.v1.parking_slot.repository import (ParkingSlotRepository)
 from app.api.v1.vehicle.repository import (VehicleRepository)
 from app.utils.helpers import Helpers
+from app.core.config import appconfig
 
 # How many times park_vehicle will retry if it loses a race for a slot
 # before giving up. Each retry picks a fresh available slot.
@@ -18,7 +20,19 @@ class ParkingSlotService(BaseService):
         self.vehicle_repository = VehicleRepository(self.db)
 
     @Helpers.handle_service_exception("create_slot")
-    def create_slot(self, payload):
+    def create_slot(self, payload: CreateParkingSlotSchema):
+
+        existing_slot = self.slot_repository.existing_slot_no(payload.slot_number)
+        existing_slot = self.slot_repository.existing_slot_no(payload.slot_number)
+        if existing_slot:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"The slot no '{existing_slot.slot_number}' is already exist.")
+
+        if int(payload.floor) < 0 or int(payload.floor) > int(appconfig.TOTAL_FLOORS):
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Floor cannot be greater than {appconfig.TOTAL_FLOORS}")
+
+        if int(payload.slot_number) < 0 or int(payload.slot_number) > int(appconfig.TOTAL_SLOTS):
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Slot number cannot be greater than {appconfig.TOTAL_SLOTS}")
+
         return self.slot_repository.create_slot(
             payload.model_dump()
         )

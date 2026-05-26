@@ -19,7 +19,7 @@ from app.api.v1.ticket.repository import TicketRepository
 
 # How many times issue_ticket retries when it loses the slot-claim
 # race to a concurrent request before giving up with 409.
-MAX_ISSUE_RETRIES = 5
+MAX_ISSUE_RETRIES = appconfig.MAX_TICKET_ISSUE_RETRIES
 
 
 class TicketService(BaseService):
