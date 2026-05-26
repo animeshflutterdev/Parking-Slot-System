@@ -102,7 +102,17 @@ class TicketService(BaseService):
                 )
                 self.db.commit()
                 self.db.refresh(ticket)
-                return ticket
+                # return ticket
+                return {
+                    "ticket": ticket,
+                    "slot": slot,
+                    "fee": {
+                        "rate_per_hour": ticket.rate_per_hour,
+                        "fee_amount": ticket.fee_amount,
+                        "entry_time": ticket.entry_time,
+                        "status": ticket.status
+                    },
+                }
 
             except IntegrityError:
                 # The partial unique index caught a race — between our

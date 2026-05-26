@@ -6,6 +6,7 @@ from app.api.v1.ticket.constants import TicketStatus
 from app.api.v1.ticket.schemas import (
     IssueTicketSchema,
     TicketResponseSchema,
+    IssueTicketResponseSchema,
 )
 from app.api.v1.ticket.service import TicketService
 
@@ -14,7 +15,8 @@ router = APIRouter()
 
 @router.post(
     "/issue",
-    response_model=TicketResponseSchema,
+    # response_model=TicketResponseSchema,
+    response_model=IssueTicketResponseSchema,
     status_code=status.HTTP_201_CREATED,
     summary="Issue a ticket — picks a free slot and starts the parking session",
     responses={
