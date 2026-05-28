@@ -32,10 +32,10 @@ class ParkingSlotService(BaseService):
 
         if int(payload.slot_number) < 0 or int(payload.slot_number) > int(appconfig.TOTAL_SLOTS):
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Slot number cannot be greater than {appconfig.TOTAL_SLOTS}")
+        
+        new_slot = self.slot_repository.create_slot(payload.model_dump())
 
-        return self.slot_repository.create_slot(
-            payload.model_dump()
-        )
+        return new_slot
 
     @Helpers.handle_service_exception("get_available_slot")
     def get_available_slot(self, slot_type):
